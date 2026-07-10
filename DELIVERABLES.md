@@ -82,22 +82,14 @@ src/
 
 ### ✅ Database Schema (Complete)
 
-**12 Prisma Models:**
-1. **User** - User profiles and authentication
-2. **Country** - Geography data for 195+ countries
-3. **GameSession** - Individual game sessions
-4. **Question** - Questions within games
-5. **GameAnswer** - Player answers and scoring
-6. **PlayerStats** - Aggregated player statistics
-7. **Achievement** - Achievement definitions (60+ planned)
-8. **UserAchievement** - User achievement progress
-9. **LeaderboardEntry** - Global and regional rankings
-10. **DailyChallenge** - Daily challenge definitions
-11. **UserDailyChallenge** - User daily challenge progress
-12. **SystemLog** - Error and event logging
+**4 Prisma Models:**
+1. **User** - User profiles and authentication (Clerk)
+2. **Country** - Geographic data for all 203 countries
+3. **ChallengeResult** - Challenge mode completions (only successful results tracked)
+4. **LeaderboardCache** - Pre-calculated monthly leaderboards
 
 **Features:**
-- 50+ database indexes for performance
+- 12+ database indexes for performance and fast leaderboard queries
 - Complete relationships and constraints
 - Type-safe with Prisma ORM
 - Optimized for scale
@@ -165,41 +157,27 @@ src/
 ### Gameplay
 ✅ 7 World Regions (World, Africa, Europe, Asia, North America, South America, Oceania)
 ✅ 3 Quiz Types (Country Name, Capital City, Flag)
-✅ 3 Game Modes (Practice, Timed, Challenge)
-✅ 4 Difficulty Levels (Easy, Medium, Hard, Expert)
+✅ 2 Game Modes (Practice - unlimited, Challenge - 3 lives)
+✅ Unlimited Time (no timer in Challenge mode)
+✅ Untimed, accuracy-focused gameplay
 
-### Scoring System
-✅ Base scoring: 100 points per correct answer
-✅ Time-based bonuses: 0-50 bonus points
-✅ Streak bonuses: 25-50 points per milestone
-✅ Difficulty multipliers: 1x to 2.5x
-✅ Perfect game bonus: 500 points
+### Challenge Mode
+✅ 3-Life System: Lose 1 life per incorrect guess
+✅ Unlimited Time: No timer, play at own pace
+✅ Auto-Saved Results: Only successful completions recorded
+✅ Transparent Ranking: Lives remaining → Fewest incorrect guesses
 
-### Player Progression
-✅ XP System: 10 XP per question answered
-✅ 100 Levels with 6 Ranks (Beginner → World Expert)
-✅ 1000 XP required per level
-✅ Daily and all-time streaks
-✅ Leaderboards (Daily, Weekly, Monthly, All-Time)
-
-### Achievements
-✅ 60+ achievements documented across 8 categories
-✅ Milestone achievements (10/100 games)
-✅ Accuracy achievements (80-100%)
-✅ Speed achievements (< 2 seconds)
-✅ Regional achievements (90%+ per region)
-✅ Challenge achievements (mode-specific)
-✅ Streak achievements (10/20/50 streak)
-✅ Prestige achievements (365 days, all unlocked)
+### Leaderboards
+✅ Monthly Rankings: Separate leaderboards per month
+✅ Segmented by Region + Question Combination (7 × 7 = 49 base leaderboards)
+✅ Multi-Month Support: Browse any month/year
+✅ Ranking Transparency: Lives remaining, incorrect guesses, completion date
 
 ### Statistics Tracking
-✅ Overall accuracy percentage
-✅ Best game score and average score
-✅ Performance by region (7 regions)
-✅ Performance by country (195+ countries)
-✅ Performance by game mode (3 modes)
-✅ Trend analysis (7/30/90 days)
-✅ Average response time tracking
+✅ Per-Region Performance: 7 regions
+✅ Per-Combination Performance: 7 question type combinations
+✅ Best Monthly Performance: Lives/incorrect guesses
+✅ Month-by-Month Comparison: Track progress over time
 
 ---
 
@@ -250,10 +228,10 @@ src/
 ### Code Structure
 - **TypeScript Types**: 30+ interfaces
 - **Constants**: 20+ configuration objects
-- **Database Tables**: 12 models
-- **Indexes**: 25+
-- **API Endpoints**: 40+
-- **Components**: 45+
+- **Database Tables**: 4 core models
+- **Indexes**: 12+
+- **API Endpoints**: 12 specified
+- **Components**: 20+ implemented
 
 ### Configuration
 - **npm Dependencies**: 30+

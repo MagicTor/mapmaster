@@ -66,13 +66,11 @@ A complete, production-ready geography game project has been created with compre
 ### Schema & Types
 
 ✅ **prisma/schema.prisma**
-- 12 data models
-- User, Country, GameSession, Question, GameAnswer
-- PlayerStats, Achievement, UserAchievement
-- LeaderboardEntry, DailyChallenge, UserDailyChallenge
-- SystemLog
-- 50+ indexes for performance
+- 4 core data models (User, Country, ChallengeResult, LeaderboardCache)
+- Simplified, focused schema for competitive gameplay
+- 12+ indexes for performance optimization
 - Complete relationships and constraints
+- No unnecessary tables (no achievements, XP, daily challenges, etc.)
 
 ✅ **src/types/index.ts**
 - 30+ TypeScript interfaces
@@ -83,9 +81,8 @@ A complete, production-ready geography game project has been created with compre
 
 ✅ **src/lib/constants.ts**
 - 20+ configuration constants
-- Region, game mode, difficulty, quiz type definitions
-- Scoring system configuration
-- Progression system settings
+- Region, game mode, quiz type definitions
+- Leaderboard configuration
 - UI colors and animations
 - Sound file paths
 - Rate limiting configuration
@@ -116,9 +113,9 @@ A complete, production-ready geography game project has been created with compre
 | **Documentation Pages** | 6 | ✅ Complete |
 | **Configuration Files** | 8 | ✅ Complete |
 | **TypeScript Interfaces** | 30+ | ✅ Complete |
-| **Database Tables** | 12 | ✅ Complete |
-| **API Endpoints** | 40+ | ✅ Specified |
-| **Components** | 45+ | ✅ Specified |
+| **Database Tables** | 4 | ✅ Complete |
+| **API Endpoints** | 12 | ✅ Specified |
+| **Components** | 20+ | ✅ Implemented |
 | **Configuration Constants** | 20+ | ✅ Complete |
 | **Total Documentation** | 115,000+ words | ✅ Complete |
 
@@ -232,24 +229,23 @@ MapMaster/
 
 ### Phase 3: Game Logic (Ready to Implement)
 - [ ] Zustand store setup
-- [ ] Game service (question generation, scoring)
+- [ ] Game service (question generation, answer checking)
 - [ ] Game flow state machine
 - [ ] Answer submission logic
-- [ ] Achievement checking
+- [ ] Lives and incorrect guess tracking
 
 ### Phase 4: API Routes (Ready to Implement)
 - [ ] Authentication endpoints
 - [ ] Game creation and submission
-- [ ] Score and leaderboard
+- [ ] Leaderboard queries
 - [ ] User statistics
-- [ ] Achievement management
+- [ ] Region/country data endpoints
 
 ### Phase 5: Features (Ready to Implement)
 - [ ] Profile page
 - [ ] Statistics dashboard
-- [ ] Achievement gallery
-- [ ] Leaderboards
-- [ ] Daily challenges
+- [ ] Leaderboards by region and question type
+- [ ] Monthly leaderboard browsing
 
 ### Phase 6: Polish & Deploy (Ready)
 - [ ] Unit tests
@@ -264,31 +260,31 @@ MapMaster/
 ## 🎯 Key Features Documented
 
 ### Game Mechanics
-✅ Region selection (7 regions)
+✅ Region selection (7 regions with 203 countries)
 ✅ Quiz types (Country, Capital, Flag)
-✅ Game modes (Practice, Timed, Challenge)
-✅ Difficulty levels (Easy, Medium, Hard, Expert)
-✅ Scoring system with bonuses
-✅ Streak tracking
-✅ Perfect game detection
+✅ Game modes (Practice - unlimited, Challenge - 3 lives)
+✅ Unlimited time (no timer)
+✅ 3-life system (lose 1 per incorrect guess)
+✅ Auto-save on successful completion
 
-### Player Progression
-✅ XP system (10 XP per question)
-✅ 100 levels with 6 ranks
-✅ Daily streak tracking
-✅ Achievement system (60+ achievements)
-✅ Leaderboards (daily, weekly, monthly, all-time)
-✅ Player statistics and analytics
+### Leaderboards & Rankings
+✅ Monthly leaderboards (separate per month)
+✅ Segmented by region + question type (7 × 7 base combinations)
+✅ Ranking by lives remaining (primary), incorrect guesses (secondary)
+✅ Transparent rankings (no hidden algorithms)
+✅ Multi-month browsing support
+✅ Player statistics dashboard
 
 ### Technical Features
-✅ Database schema with 12 tables
-✅ 40+ API endpoints
-✅ 45+ React components
+✅ Database schema with 4 core tables
+✅ 12 API endpoints
+✅ 20+ React components implemented
 ✅ Zustand state management
 ✅ TypeScript type safety
 ✅ Tailwind CSS styling
 ✅ Framer Motion animations
 ✅ Clerk authentication
+✅ SVG interactive maps (react-simple-maps)
 
 ---
 
@@ -319,8 +315,8 @@ MapMaster/
 ### For Product Managers:
 1. Review 01-PRD.md for complete feature specifications
 2. Use the implementation roadmap for timeline planning
-3. Reference achievement list for engagement metrics
-4. Check leaderboard design for competitive features
+3. Reference leaderboard design for competitive features
+4. Check statistics dashboard for player engagement tracking
 
 ### For Designers:
 1. Review 05-COMPONENTS.md for UI requirements

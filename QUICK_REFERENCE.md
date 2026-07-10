@@ -134,20 +134,20 @@ npm run lint
 ### Gameplay
 - 7 world regions
 - 3 quiz types (Country, Capital, Flag)
-- 3 game modes (Practice, Timed, Challenge)
-- 4 difficulty levels (Easy → Expert)
+- 2 game modes (Practice, Challenge)
+- 7 question combinations (selectable via checkboxes)
 
-### Scoring
-- Base: 100 points/correct
-- Speed bonus: 0-50 points
-- Streak bonus: 25-50 points
-- Multiplier: 1x-2.5x by difficulty
+### Challenge Mode
+- 3-life system (lose 1 per incorrect guess)
+- Unlimited time (no timer)
+- Rank by: lives remaining → fewest incorrect guesses
+- Auto-saved to monthly leaderboards
 
-### Progression
-- XP system (10 XP/question)
-- 100 levels with 6 ranks
-- 60+ achievements
-- Daily/all-time streaks
+### Leaderboards
+- 588 total leaderboards (7 regions × 7 combinations × 12 months)
+- Segmented by region, question type, and month
+- Only Challenge Mode completions recorded
+- Transparent competitive rankings
 
 ### Analytics
 - Accuracy by region (7 regions)

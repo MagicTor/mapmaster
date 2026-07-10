@@ -115,7 +115,6 @@ Finalize game and save result (Challenge mode only).
   "livesRemaining": 2,
   "incorrectGuesses": 3,
   "completedAt": "2024-07-15T14:30:00Z",
-  "score": 1250,
   "leaderboardRank": 8,
   "totalQualifiedPlayers": 421,
   "message": "Challenge completed! You rank #8 globally."

@@ -8,9 +8,9 @@ A competitive browser-based geography map game where players identify countries 
 
 - **Question Types**: Countries, Capital Cities, Flags (user-selectable via checkboxes)
 - **Playable Regions**: 7 regions with 203 total countries and territories
-- **Game Modes**: Practice (unlimited, no score), Challenge (3-second timer, 3 lives)
+- **Game Modes**: Practice (unlimited time, unlimited guesses, never saved), Challenge (3 lives, unlimited time, ranked globally)
 - **Leaderboards**: Separate ranking for every Region × Question Type Combination × Month
-- **Ranking Criteria**: Fastest completion time, then most lives remaining
+- **Ranking Criteria**: Most lives remaining (primary), then fewest incorrect guesses (secondary)
 
 ---
 
@@ -20,7 +20,7 @@ Players click countries on an interactive map to answer geography questions. Eac
 
 **Practice Mode**: Learn at your own pace with no timer, unlimited guesses, and Reveal/Skip buttons.
 
-**Challenge Mode**: Race against the clock with 3 lives. Complete all countries before time runs out or lives expire.
+**Challenge Mode**: Complete all countries before losing 3 lives. No timer—play at your own pace. Results automatically saved to monthly leaderboards.
 
 ---
 
@@ -152,8 +152,8 @@ Only Challenge Mode completions are recorded:
 - Player ID
 - Region
 - Question Type Combination
-- Completion Time (milliseconds)
 - Lives Remaining
+- Incorrect Guesses
 - Month / Year
 - Timestamp
 
@@ -192,11 +192,9 @@ Countries Only
 
 Last Challenge:
 2 Lives Remaining
-1 Incorrect Guess
 
 Best This Month:
 3 Lives Remaining
-0 Incorrect Guesses
 
 Current Rank:
 #8 of 421 Players
@@ -235,15 +233,16 @@ User begins answering
 
 ### 6. Game End
 **Practice**: User fills all countries, clicks end/close
-**Challenge**: Timer expires OR lives lost OR all countries filled
+**Challenge**: All 3 lives lost (failure) OR all countries filled with at least 1 life remaining (success)
 
 ### 7. Results Screen
 Display:
-- Completion Time (or time ran out)
-- Lives Remaining (or Lives Lost)
+- Lives Remaining (1, 2, or 3)
+- Incorrect Guesses (total count)
 - Countries Completed / Total
 - Region Name
 - Question Types Used
+- Completion Date
 
 If Challenge was successful:
 - Show leaderboard position

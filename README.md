@@ -1,19 +1,20 @@
 # MapMaster - Browser-Based World Geography Game
 
-A modern, production-ready web application for testing and improving geography knowledge through interactive map challenges.
+A competitive, production-ready web application for testing geography knowledge through interactive map challenges. Pure skill-based gameplay with transparent rankings.
 
 ## 🌍 Features
 
-- **Interactive World Map**: Click countries to answer geography questions
-- **Multiple Game Modes**: Practice, Timed, and Challenge modes
-- **Various Question Types**: Country names, capital cities, flags
-- **Difficulty Levels**: Easy, Medium, Hard, and Expert
-- **Comprehensive Scoring System**: Points, streaks, bonuses, and multipliers
-- **Achievement System**: 60+ achievements to unlock
-- **Detailed Statistics**: Track performance by region, country, and mode
-- **Global Leaderboards**: Daily, weekly, monthly, and all-time rankings
-- **Player Progression**: XP system with 100 levels and 6 ranks
+- **Interactive SVG World Map**: Click countries to answer geography questions (powered by react-simple-maps)
+- **Two Game Modes**: 
+  - **Practice Mode**: Learn at your own pace (no timer, unlimited guesses, never saved)
+  - **Challenge Mode**: Competitive gameplay (3 lives, unlimited time, ranked globally)
+- **Multiple Question Types**: Country names, capital cities, and flags (user-selectable)
+- **7 Playable Regions**: North America (24), South America (13), Europe (47), Asia (47), Oceania (17), Africa (55), World (203)
+- **Pure Competitive Leaderboards**: Monthly rankings segmented by region + question combination
+- **Ranking System**: Based on lives remaining, then fewest incorrect guesses
+- **Audio System**: Sound effects for correct/incorrect answers with volume control
 - **Responsive Design**: Works perfectly on desktop, tablet, and mobile
+- **Modern Tech Stack**: Next.js 14, React 18, TypeScript, Tailwind CSS, Framer Motion
 
 ## 🚀 Quick Start
 
@@ -198,51 +199,104 @@ Comprehensive documentation is available in the `/docs` directory:
 
 ## 🎮 Game Mechanics
 
-### Scoring System
+### Practice Mode
 
-Base score for each correct answer: **100 points**
+- **No Timer**: Unlimited time per question
+- **Unlimited Guesses**: Try as many times as needed
+- **Special Controls**: 
+  - Reveal: Shows the correct country and marks it complete
+  - Skip: Moves to next question without filling country
+- **Completion**: When all countries in the region are filled
+- **Results**: Never saved to leaderboard (practice only)
 
-**Speed Bonus**:
-- 0-5 seconds: +50 points
-- 5-10 seconds: +25 points
-- 10+ seconds: +0 points
+### Challenge Mode
 
-**Streak Bonus**:
-- Every 5 consecutive correct: +25 points
-- Every 10 consecutive correct: +50 points
+- **3 Lives System**: Start with 3 lives, lose 1 per incorrect guess
+- **Unlimited Time**: No timer—play at your own pace
+- **Objective**: Fill in every country before losing all 3 lives
+- **Results**: Automatically saved to monthly leaderboards
+- **Ranking**: By most lives remaining (3 lives = best), then fewest incorrect guesses
 
-**Difficulty Multiplier**:
-- Easy: 1x
-- Medium: 1.5x
-- Hard: 2x
-- Expert: 2.5x
+### Question Format
 
-Formula: `Score = (BaseScore + TimeBonus + StreakBonus) * DifficultyMultiplier`
+All questions follow a consistent pattern: **"Find [Target]"**
 
-### Experience & Progression
+**Country Mode Example**:
+```
+Find Germany
+```
 
-- **Base XP**: 10 per question
-- **Multiplier**: 1.5x for correct, 1x for incorrect
-- **XP per Level**: 1000 XP
+**City Mode Example**:
+```
+Find Berlin
+```
+(Player clicks the country containing Berlin)
 
-**Ranks**:
-1. Beginner (Levels 1-10)
-2. Explorer (Levels 11-25)
-3. Cartographer (Levels 26-40)
-4. Geographer (Levels 41-60)
-5. Atlas Master (Levels 61-85)
-6. World Expert (Levels 86-100)
+**Flag Mode Example**:
+```
+Find [Flag Image]
+```
+(Player clicks the country matching that flag)
 
-### Achievements
+### Mixed Questions
 
-60+ achievements across categories:
-- **Milestone**: Game completion milestones
-- **Accuracy**: Precision-based achievements
-- **Speed**: Time-based achievements
-- **Regional**: Region-specific mastery
-- **Challenge**: Mode-specific challenges
-- **Streak**: Consecutive answer streaks
-- **Prestige**: Long-term commitments
+When multiple question types are selected, they appear in random order:
+
+```
+Question 1: Find France
+Question 2: Find [Italian Flag]
+Question 3: Find Madrid
+Question 4: Find Japan
+etc.
+```
+
+### Map Visual Feedback
+
+**Question Answered Correctly**:
+- Question bar flashes GREEN briefly
+- Country fills in with solid color
+- Next question appears
+
+**Question Answered Incorrectly**:
+- Question bar flashes RED briefly
+- Lose 1 life in Challenge Mode
+- Country remains outline-only (no permanent red coloring)
+- Same question repeats for reattempt
+
+**Game States**:
+- **Unanswered**: Country outline only
+- **Correct**: Country filled in with color
+- **Incomplete**: Unfilled countries remain outlines
+
+### Leaderboard Rankings
+
+Leaderboards are segmented by:
+1. **Region** (7 regions)
+2. **Question Combination** (7 possible combinations):
+   - Countries only
+   - Cities only
+   - Flags only
+   - Countries + Cities
+   - Countries + Flags
+   - Cities + Flags
+   - Countries + Cities + Flags
+3. **Month** (each month has separate rankings)
+
+**Ranking Order**:
+1. Most Lives Remaining (higher is better)
+2. Fewest Incorrect Guesses (lower is better)
+3. Earliest Completion Date (tiebreaker)
+
+Example leaderboard entry:
+```
+Rank #1
+Player: GeographyMaster
+Region: Europe
+Mode: Countries + Flags
+Lives Remaining: 3
+Incorrect Guesses: 2
+Date: July 10, 2026
+```
 
 ## 🔐 Security
 

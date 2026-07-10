@@ -79,10 +79,10 @@ All 5 core documentation files have been completely rewritten (52.2 KB total):
 - **Rationale**: Focus on pure competitive gameplay
 - **Impact**: ~60% reduction in code complexity
 
-### 2. Game Balance (Timer & Lives)
-- **Decision**: Exactly 3000ms (3 seconds) timer, exactly 3 lives
-- **Rationale**: Creates aggressive, skill-based gameplay
-- **Impact**: High skill ceiling, fast-paced experience
+### 2. Game Balance (Lives without Timer)
+- **Decision**: 3 lives per game, unlimited time
+- **Rationale**: Encourages accuracy over speed, fair competition
+- **Impact**: Skill-based gameplay, transparent rankings by accuracy
 
 ### 3. Leaderboard Segmentation (Fair Competition)
 - **Decision**: 588 independent leaderboards (7 regions × 7 combos × 12 months)
@@ -125,22 +125,22 @@ All 5 core documentation files have been completely rewritten (52.2 KB total):
 
 These requirements are explicitly specified and critical to the design:
 
-1. **Challenge Mode Timer**: Exactly 3000ms (3 seconds)
-   - User directive: "Use my specified value exactly unless later changed"
+1. **Challenge Mode Timer**: NONE (Unlimited Time)
+   - User directive: "Challenge Mode is NOT timed. Remove all countdown timers and time limits."
    - Non-negotiable
 
 2. **Challenge Mode Lives**: Exactly 3 lives per game
    - Each wrong answer costs 1 life
-   - Game ends at 0 lives or timer expiration
+   - Game ends at 0 lives OR all countries completed
 
-3. **Leaderboard Segmentation**: Region × Question Combo × Month
-   - 588 independent leaderboards
+3. **Challenge Mode Ranking**: Lives Remaining (primary), then Incorrect Guesses (secondary)
+   - Primary: Most lives remaining (3 > 2 > 1)
+   - Secondary: Fewest incorrect guesses
+   - Tertiary: Earliest completion timestamp
+
+4. **Leaderboard Segmentation**: Region × Question Combo × Month
+   - 588 independent leaderboards (7 regions × 7 combos × 12 months)
    - Each combo must have separate rankings
-
-4. **Ranking Order**: Time (ascending), then Lives (descending), then Timestamp
-   - Primary: Fastest completion time
-   - Secondary: Most lives remaining
-   - Tertiary: Earlier completion timestamp
 
 5. **Practice Mode**: Never saved
    - No leaderboard entries created
