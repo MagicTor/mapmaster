@@ -35,7 +35,7 @@ export default function ResultsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [questionTypes, region]);
+  }, [region]);
 
   // Fetch leaderboard position if Challenge mode and successful
   useEffect(() => {
