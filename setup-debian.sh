@@ -39,7 +39,21 @@ escape_sql_literal() {
 }
 
 url_encode() {
-  node -e 'console.log(encodeURIComponent(process.argv[1]))' "$1"
+  local raw="$1"
+  local encoded=""
+  local i c hex
+  LC_ALL=C
+  for ((i = 0; i < ${#raw}; i++)); do
+    c="${raw:i:1}"
+    case "$c" in
+      [a-zA-Z0-9.~_-]) encoded+="$c" ;;
+      *)
+        printf -v hex '%%%02X' "'$c"
+        encoded+="$hex"
+        ;;
+    esac
+  done
+  printf "%s" "$encoded"
 }
 
 set_env_var() {
