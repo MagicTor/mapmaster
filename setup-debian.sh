@@ -113,6 +113,20 @@ else
   echo "DATABASE_URL=${DATABASE_URL}" >> .env.local
 fi
 
+# Prisma CLI reads .env by default (not .env.local), so ensure DATABASE_URL exists there too.
+if [ -f ".env" ]; then
+  if grep -q '^DATABASE_URL=' .env; then
+    sed -i "s|^DATABASE_URL=.*|DATABASE_URL=${DATABASE_URL}|" .env
+  else
+    echo "DATABASE_URL=${DATABASE_URL}" >> .env
+  fi
+else
+  echo "DATABASE_URL=${DATABASE_URL}" > .env
+fi
+
+# Also export for current shell execution (covers all Prisma commands in this script).
+export DATABASE_URL
+
 if grep -q '^NEXT_PUBLIC_API_URL=' .env.local; then
   sed -i "s|^NEXT_PUBLIC_API_URL=.*|NEXT_PUBLIC_API_URL=http://localhost:3000|" .env.local
 fi
@@ -141,4 +155,3 @@ log "Next steps:"
 log "  1) Review .env.local and set real Clerk keys."
 log "  2) Start dev server: npm run dev"
 log "  3) Start production server: npm run start"
-
