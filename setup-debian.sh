@@ -16,6 +16,15 @@ command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
+npm_install_global() {
+  local package_name="$1"
+  if [ "${EUID:-$(id -u)}" -eq 0 ]; then
+    npm install -g "$package_name"
+  else
+    npm install -g "$package_name" || sudo npm install -g "$package_name"
+  fi
+}
+
 apt_install() {
   if [ "${EUID:-$(id -u)}" -eq 0 ]; then
     apt-get update
@@ -258,7 +267,12 @@ log "Building project..."
 npm run build
 
 log "Installing PM2..."
-npm install -g pm2
+npm_install_global pm2
+
+if ! command_exists pm2; then
+  echo "PM2 installation completed, but 'pm2' is not in PATH. Re-login and retry."
+  exit 1
+fi
 
 log "Starting app with PM2..."
 pm2 delete mapmaster >/dev/null 2>&1 || true
