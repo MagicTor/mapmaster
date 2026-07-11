@@ -50,7 +50,6 @@ export function GameMap({
     center: [0, 0],
     zoom: 1,
   });
-  const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
   useEffect(() => {
@@ -139,8 +138,6 @@ export function GameMap({
           <Geographies geography={geoUrl} onLoadComplete={handleMapLoad}>
             {({ geographies }) =>
               geographies.map((geo) => {
-                const countryName = geo.properties?.name;
-
                 return (
                   <motion.g
                     key={geo.rsmKey}
@@ -151,12 +148,6 @@ export function GameMap({
                     <Geography
                       geography={geo}
                       onClick={() => handleGeographyClick(geo)}
-                      onMouseEnter={() => {
-                        if (!disabled) {
-                          setHoveredCountry(countryName);
-                        }
-                      }}
-                      onMouseLeave={() => setHoveredCountry(null)}
                       style={{
                         default: {
                           stroke: '#ccc',
