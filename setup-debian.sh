@@ -18,10 +18,28 @@ command_exists() {
 
 npm_install_global() {
   local package_name="$1"
+  local npm_prefix=""
+  local global_modules_dir=""
+
   if [ "${EUID:-$(id -u)}" -eq 0 ]; then
     npm install -g "$package_name"
   else
-    npm install -g "$package_name" || sudo npm install -g "$package_name"
+    npm_prefix="$(npm config get prefix 2>/dev/null || echo "/usr")"
+    global_modules_dir="${npm_prefix%/}/lib/node_modules"
+
+    if [ -d "$global_modules_dir" ] && [ -w "$global_modules_dir" ]; then
+      npm install -g "$package_name"
+      return
+    fi
+
+    if command_exists sudo; then
+      sudo npm install -g "$package_name"
+      return
+    fi
+
+    echo "Global npm install requires elevated permissions, but sudo is unavailable."
+    echo "Please run this script as root or install sudo for user-level setup."
+    exit 1
   fi
 }
 
