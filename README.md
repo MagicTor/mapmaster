@@ -31,6 +31,10 @@ A competitive, production-ready web application for testing geography knowledge 
 chmod +x ./setup-debian.sh
 ./setup-debian.sh
 ```
+The script will prompt for:
+- `MAPMASTER_DB_NAME` (default: `mapmaster_dev`)
+- `MAPMASTER_DB_USER` (default: `mapmaster`)
+- `MAPMASTER_DB_PASSWORD` (required, hidden input)
 
 1. **Clone the repository**
 ```bash

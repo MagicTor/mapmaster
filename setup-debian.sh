@@ -40,11 +40,54 @@ escape_sql_literal() {
 
 require_repo_root
 
-DB_NAME="${MAPMASTER_DB_NAME:-mapmaster_dev}"
-DB_USER="${MAPMASTER_DB_USER:-mapmaster}"
-DB_PASSWORD="${MAPMASTER_DB_PASSWORD:-mapmaster_change_me}"
+prompt_with_default() {
+  local prompt="$1"
+  local default_value="$2"
+  local input=""
+  read -r -p "$prompt [$default_value]: " input
+  if [ -z "$input" ]; then
+    printf "%s" "$default_value"
+  else
+    printf "%s" "$input"
+  fi
+}
+
+prompt_password() {
+  local password=""
+  local password_confirm=""
+  while true; do
+    read -r -s -p "Database password (input hidden): " password
+    echo ""
+    if [ -z "$password" ]; then
+      echo "Password cannot be empty."
+      continue
+    fi
+    read -r -s -p "Confirm password: " password_confirm
+    echo ""
+    if [ "$password" != "$password_confirm" ]; then
+      echo "Passwords do not match. Try again."
+      continue
+    fi
+    printf "%s" "$password"
+    return
+  done
+}
+
+DB_NAME="$(prompt_with_default "Database name" "${MAPMASTER_DB_NAME:-mapmaster_dev}")"
+DB_USER="$(prompt_with_default "Database user" "${MAPMASTER_DB_USER:-mapmaster}")"
+DB_PASSWORD="$(prompt_password)"
 DB_HOST="${MAPMASTER_DB_HOST:-localhost}"
 DB_PORT="${MAPMASTER_DB_PORT:-5432}"
+
+if printf "%s" "$DB_PASSWORD" | grep -Eq '[@:/?#\[\]]'; then
+  echo "Password contains URL-special characters (@ : / ? # [ ])."
+  echo "Use a URL-safe password or extend the script to URL-encode DATABASE_URL."
+  exit 1
+fi
+
+export MAPMASTER_DB_NAME="$DB_NAME"
+export MAPMASTER_DB_USER="$DB_USER"
+export MAPMASTER_DB_PASSWORD="$DB_PASSWORD"
 DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
 
 log "Installing base system dependencies..."
@@ -93,6 +136,10 @@ ROLE_EXISTS="$(run_as_postgres "psql -tAc \"SELECT 1 FROM pg_roles WHERE rolname
 if [ "${ROLE_EXISTS}" != "1" ]; then
   DB_PASSWORD_ESCAPED="$(escape_sql_literal "${DB_PASSWORD}")"
   run_as_postgres "psql -c \"CREATE USER \\\"${DB_USER}\\\" WITH PASSWORD '${DB_PASSWORD_ESCAPED}';\""
+else
+  # Keep PostgreSQL credentials in sync with the password provided in this setup run.
+  DB_PASSWORD_ESCAPED="$(escape_sql_literal "${DB_PASSWORD}")"
+  run_as_postgres "psql -c \"ALTER USER \\\"${DB_USER}\\\" WITH PASSWORD '${DB_PASSWORD_ESCAPED}';\""
 fi
 
 DB_EXISTS="$(run_as_postgres "psql -tAc \"SELECT 1 FROM pg_database WHERE datname='${DB_NAME}'\"" | tr -d '[:space:]' || true)"
