@@ -50,11 +50,21 @@ export function GameMap({
     center: [0, 0],
     zoom: 1,
   });
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const [mapStatus, setMapStatus] = useState<'loading' | 'ready' | 'failed'>(
+    'loading'
+  );
 
   useEffect(() => {
     viewStateRef.current = viewState;
   }, [viewState]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setMapStatus((prev) => (prev === 'loading' ? 'failed' : prev));
+    }, 10000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   // Initialize view state for region
   useEffect(() => {
@@ -119,14 +129,26 @@ export function GameMap({
   };
 
   const handleMapLoad = () => {
-    setMapLoaded(true);
+    setMapStatus('ready');
   };
+
+  if (mapStatus === 'failed') {
+    return (
+      <GameMapFallback
+        countries={countries}
+        answeredCountries={answeredCountries}
+        correctCountries={correctCountries}
+        onCountryClick={onCountryClick}
+        disabled={disabled}
+      />
+    );
+  }
 
   return (
     <div className="w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden">
       {/* Map container */}
       <div className="relative w-full h-full min-h-[400px] md:min-h-[600px]">
-        {!mapLoaded && (
+        {mapStatus === 'loading' && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 z-10">
             <div className="text-center">
               <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4" />
