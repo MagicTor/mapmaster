@@ -38,6 +38,10 @@ escape_sql_literal() {
   printf "%s" "$1" | sed "s/'/''/g"
 }
 
+url_encode() {
+  node -e 'console.log(encodeURIComponent(process.argv[1]))' "$1"
+}
+
 set_env_var() {
   local file_path="$1"
   local key="$2"
@@ -107,17 +111,12 @@ DB_USER="$(prompt_with_default "Database user" "${MAPMASTER_DB_USER:-mapmaster}"
 DB_PASSWORD="$(prompt_password)"
 DB_HOST="${MAPMASTER_DB_HOST:-localhost}"
 DB_PORT="${MAPMASTER_DB_PORT:-5432}"
-
-if printf "%s" "$DB_PASSWORD" | grep -Eq '[@:/?#\[\]]'; then
-  echo "Password contains URL-special characters (@ : / ? # [ ])."
-  echo "Use a URL-safe password or extend the script to URL-encode DATABASE_URL."
-  exit 1
-fi
+DB_PASSWORD_URLENC="$(url_encode "$DB_PASSWORD")"
 
 export MAPMASTER_DB_NAME="$DB_NAME"
 export MAPMASTER_DB_USER="$DB_USER"
 export MAPMASTER_DB_PASSWORD="$DB_PASSWORD"
-DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD_URLENC}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
 
 log "Installing base system dependencies..."
 apt_install curl git ca-certificates gnupg build-essential
@@ -177,6 +176,31 @@ if [ "${DB_EXISTS}" != "1" ]; then
 fi
 
 run_as_postgres "psql -c \"GRANT ALL PRIVILEGES ON DATABASE \\\"${DB_NAME}\\\" TO \\\"${DB_USER}\\\";\""
+
+# Verify password authentication over TCP before running Prisma.
+auth_ok=false
+for attempt in 1 2 3; do
+  if PGPASSWORD="${DB_PASSWORD}" psql -h "${DB_HOST}" -p "${DB_PORT}" -U "${DB_USER}" -d "${DB_NAME}" -c "SELECT 1;" >/dev/null 2>&1; then
+    auth_ok=true
+    break
+  fi
+
+  echo "PostgreSQL authentication test failed for user '${DB_USER}' on ${DB_HOST}:${DB_PORT}/${DB_NAME}."
+  if [ "$attempt" -lt 3 ]; then
+    echo "Please re-enter database password."
+    DB_PASSWORD="$(prompt_password)"
+    DB_PASSWORD_URLENC="$(url_encode "$DB_PASSWORD")"
+    export MAPMASTER_DB_PASSWORD="$DB_PASSWORD"
+    DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD_URLENC}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
+    DB_PASSWORD_ESCAPED="$(escape_sql_literal "${DB_PASSWORD}")"
+    run_as_postgres "psql -c \"ALTER USER \\\"${DB_USER}\\\" WITH PASSWORD '${DB_PASSWORD_ESCAPED}';\""
+  fi
+done
+
+if [ "${auth_ok}" != true ]; then
+  echo "Unable to authenticate to PostgreSQL after 3 attempts. Exiting."
+  exit 1
+fi
 
 if [ ! -f ".env.local" ]; then
   log "Creating .env.local from .env.example..."
