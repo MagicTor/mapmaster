@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { Suspense, useEffect, useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { motion } from 'framer-motion';
 
-export default function ResultsPage() {
+function ResultsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const gameStore = useGameStore();
@@ -61,6 +61,22 @@ export default function ResultsPage() {
           <p className="text-gray-600 dark:text-gray-400 mb-4">Loading results...</p>
         </div>
       </div>
+    );
+  }
+
+  export default function ResultsPage() {
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+            <div className="text-center">
+              <p className="text-gray-600 dark:text-gray-400 mb-4">Loading results...</p>
+            </div>
+          </div>
+        }
+      >
+        <ResultsPageContent />
+      </Suspense>
     );
   }
 
