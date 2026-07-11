@@ -72,6 +72,7 @@ export function GameMap({
       return () => cancel();
     } catch (e) {
       console.warn('Failed to animate to region:', e);
+      return undefined;
     }
   }, [region]);
 
