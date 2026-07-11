@@ -33,7 +33,7 @@
 ### ✅ Source Code Structure (Foundation)
 
 **Core Files:**
-- **src/app/layout.tsx** - Root layout with Clerk authentication (100% complete)
+- **src/app/layout.tsx** - Root layout with app providers (100% complete)
 - **src/app/page.tsx** - Beautiful responsive home page (100% complete)
 - **src/types/index.ts** - 30+ TypeScript interfaces for complete type safety
 - **src/lib/constants.ts** - 20+ configuration constants
@@ -83,7 +83,7 @@ src/
 ### ✅ Database Schema (Complete)
 
 **4 Prisma Models:**
-1. **User** - User profiles and authentication (Clerk)
+1. **User** - User profiles and local authentication
 2. **Country** - Geographic data for all 203 countries
 3. **ChallengeResult** - Challenge mode completions (only successful results tracked)
 4. **LeaderboardCache** - Pre-calculated monthly leaderboards
@@ -97,7 +97,7 @@ src/
 ### ✅ API Specification (40+ Endpoints)
 
 **Endpoint Categories:**
-- **Authentication**: Clerk-managed endpoints
+- **Authentication**: Local register/login + JWT endpoints
 - **Games**: Create, submit, end, get results (5 endpoints)
 - **Scores**: Leaderboard, user scores, daily top scores (3+ endpoints)
 - **Users**: Profile, stats, achievements (5+ endpoints)
@@ -203,7 +203,7 @@ src/
 - **Node.js 20** - JavaScript runtime
 
 ### Authentication & Services
-- **Clerk** - Managed authentication provider
+- **JWT auth** - Local authentication provider
 - **Sentry** - Error tracking
 - **PostHog** - Analytics
 - **Vercel** - Frontend hosting

@@ -10,12 +10,12 @@ Simplified database design optimized for competitive geography gameplay. Only Ch
 
 ### User
 
-Stores user account information. Authentication is handled by Clerk.
+Stores user account information. Authentication is handled locally with hashed passwords and JWT.
 
 ```sql
 CREATE TABLE "User" (
   id TEXT PRIMARY KEY,
-  clerkId TEXT UNIQUE NOT NULL,
+  passwordHash TEXT NOT NULL,
   email TEXT UNIQUE NOT NULL,
   username TEXT UNIQUE,
   displayName TEXT,
@@ -24,13 +24,12 @@ CREATE TABLE "User" (
   updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_clerk_id ON "User"(clerkId);
 CREATE INDEX idx_email ON "User"(email);
 ```
 
 **Fields**:
 - `id`: Unique identifier (UUID)
-- `clerkId`: Clerk authentication ID
+- `passwordHash`: Bcrypt password hash
 - `email`: User email address
 - `username`: Optional display username
 - `displayName`: Optional full name
@@ -402,7 +401,7 @@ Sources:
 
 ### Initial Users
 
-None required - users created via Clerk authentication.
+None required - users can be created via `/api/auth/register`.
 
 ---
 
@@ -412,7 +411,6 @@ Strategic indexes for query performance:
 
 | Table | Index | Purpose |
 |-------|-------|---------|
-| User | clerkId | Authentication lookups |
 | User | email | Email-based queries |
 | Country | region | Get countries by region |
 | ChallengeResult | userId | User's game history |

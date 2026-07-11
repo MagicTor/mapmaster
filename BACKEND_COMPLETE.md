@@ -30,7 +30,7 @@ All backend infrastructure for MapMaster is complete and production-ready.
 
 ### ✅ Database Schema (4 tables)
 
-- **User** - Clerk auth integration, profile
+- **User** - local auth integration, profile
 - **Country** - All 203 countries with capitals, flags, regions
 - **ChallengeResult** - Leaderboard entries (Challenge mode only)
 - **LeaderboardCache** - Optional pre-calculation table
@@ -77,7 +77,7 @@ All backend infrastructure for MapMaster is complete and production-ready.
 ```bash
 Node.js 18+
 PostgreSQL 12+
-Clerk account
+JWT secret configured in environment
 ```
 
 ### Setup
@@ -87,11 +87,11 @@ npm install
 
 # 2. Configure environment
 cp .env.example .env.local
-# Edit .env.local with your database URL and Clerk keys
+# Edit .env.local with your database URL and AUTH_JWT_SECRET
 
 # 3. Initialize database
 npm run prisma:generate
-npm run prisma:migrate
+npm run db:push
 npm run db:seed
 
 # 4. Start development
@@ -103,7 +103,7 @@ npm run dev
 # Create a game
 curl -X POST http://localhost:3000/api/games/create \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $CLERK_TOKEN" \
+  -H "Authorization: Bearer <jwt-token>" \
   -d '{"region":"Europe","questionTypes":["countries"],"mode":"challenge"}'
 ```
 
@@ -164,9 +164,9 @@ curl -X POST http://localhost:3000/api/games/create \
 - No timer pressure (time doesn't affect ranking)
 
 ✅ **Authentication**
-- Integrated with Clerk
+- Integrated with local JWT auth
 - User created on first successful Challenge
-- Leaderboard entries tied to Clerk user ID
+- Leaderboard entries tied to authenticated local user ID
 
 ✅ **Input Validation**
 - Zod schemas for all POST requests
@@ -220,7 +220,7 @@ curl -X POST http://localhost:3000/api/games/create \
 ## Security
 
 ✅ **Implemented**
-- Clerk JWT authentication
+- JWT bearer authentication
 - Parameterized queries (Prisma prevents SQL injection)
 - Environment variables for secrets
 - Zod input validation
@@ -299,18 +299,18 @@ prisma/
 
 - [ ] Clone repository
 - [ ] Set up PostgreSQL database
-- [ ] Create Clerk application
+- [ ] Set a production-grade AUTH_JWT_SECRET
 - [ ] Configure environment variables
 - [ ] Run `npm install`
-- [ ] Run `npm run prisma:migrate`
+- [ ] Run `npm run db:push`
 - [ ] Run `npm run db:seed`
 - [ ] Test API endpoints locally
 - [ ] Push to GitHub
 - [ ] Deploy to Vercel
 - [ ] Configure Vercel environment variables
-- [ ] Run production migrations: `npm run prisma:migrate -- --skip-generate`
+- [ ] Run production schema sync: `npm run db:push`
 - [ ] Set up monitoring/logging
-- [ ] Configure Clerk webhook (optional)
+- [ ] Validate auth token expiration settings
 
 ---
 
@@ -349,7 +349,7 @@ See `FRONTEND_INTEGRATION_GUIDE.md` for complete frontend specs.
 - **Frontend**: `FRONTEND_INTEGRATION_GUIDE.md` - Component specs, examples
 - **Architecture**: `prisma/schema.prisma` - Database design
 - **Utils**: `src/lib/` - Game logic helpers
-- **Clerk Docs**: https://clerk.com/docs
+- **Auth Endpoints**: `/api/auth/register`, `/api/auth/login`
 - **Prisma Docs**: https://www.prisma.io/docs/
 
 ---

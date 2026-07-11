@@ -48,7 +48,7 @@ docs/
 - Next.js API Routes
 - Prisma ORM
 - PostgreSQL
-- Clerk Auth
+- Local username/password auth + JWT
 - Redis (optional)
 
 **DevOps:**
@@ -69,7 +69,7 @@ DailyChallenge → [UserDailyChallenge]
 ### 4. API Specification (40+ Endpoints)
 
 ```
-Authentication (Clerk managed)
+Authentication (`/api/auth/register`, `/api/auth/login`)
 Games (5 endpoints)
 Scores (3+ endpoints)
 Users (5+ endpoints)
@@ -220,7 +220,7 @@ MapMaster/
 ### Architecture Decisions
 | Decision | Reason |
 |----------|--------|
-| Clerk Auth | Focus on game, not auth complexity |
+| Local JWT Auth | Full control over auth and deployment simplicity |
 | Vercel Hosting | Serverless scaling, excellent DX |
 | REST API | Clear contracts, easy testing |
 | Component-driven | Reusable, testable, maintainable |

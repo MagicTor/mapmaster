@@ -89,7 +89,7 @@ A complete, production-ready geography game project has been created with compre
 
 ### Source Code
 
-✅ **src/app/layout.tsx** - Root layout with Clerk authentication
+✅ **src/app/layout.tsx** - Root layout with app providers
 ✅ **src/app/page.tsx** - Beautiful, fully responsive home page with:
 - Navigation bar
 - Hero section
@@ -137,7 +137,7 @@ npm install
 ### Step 3: Setup Environment
 ```bash
 cp .env.example .env.local
-# Edit .env.local with your Clerk API keys and database URL
+# Edit .env.local with your AUTH_JWT_SECRET and database URL
 ```
 
 ### Step 4: Setup Database
@@ -283,7 +283,7 @@ MapMaster/
 ✅ TypeScript type safety
 ✅ Tailwind CSS styling
 ✅ Framer Motion animations
-✅ Clerk authentication
+✅ Local JWT authentication
 ✅ SVG interactive maps (react-simple-maps)
 
 ---
@@ -335,7 +335,7 @@ MapMaster/
 
 ## 🔒 Security Considerations
 
-- ✅ Clerk managed authentication
+- ✅ Local username/password + JWT authentication
 - ✅ Environment variables for sensitive data
 - ✅ Rate limiting on all endpoints
 - ✅ Input validation with Zod

@@ -5,7 +5,6 @@
 ### Prerequisites
 - Node.js 20+ and npm 10+
 - PostgreSQL 12+
-- Clerk account (https://clerk.com)
 - Vercel account (optional, for deployment)
 
 ### 1. Install Node.js and npm (Debian)
@@ -33,16 +32,14 @@ cp .env.example .env.local
 
 # Edit .env.local with your values:
 # - DATABASE_URL: PostgreSQL connection string
-# - CLERK authentication keys
+# - AUTH_JWT_SECRET for local authentication
 # - NEXT_PUBLIC_APP_URL: your app URL
 ```
 
 **Required variables:**
 ```env
 DATABASE_URL=postgresql://user:password@localhost:5432/mapmaster
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
-CLERK_SECRET_KEY=sk_test_...
-CLERK_WEBHOOK_SECRET=whsec_...
+AUTH_JWT_SECRET=replace-with-a-long-random-secret
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
@@ -67,6 +64,15 @@ npm run dev
 
 Server runs at: http://localhost:3000
 
+### PM2 Production Start (No Nginx)
+
+```bash
+npm run build
+pm2 start npm --name mapmaster -- start
+pm2 save
+pm2 startup
+```
+
 ## API Verification
 
 After setup, test the API endpoints:
@@ -75,7 +81,7 @@ After setup, test the API endpoints:
 # Create a game
 curl -X POST http://localhost:3000/api/games/create \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_CLERK_TOKEN" \
+  -H "Authorization: Bearer <jwt-token>" \
   -d '{
     "region": "Europe",
     "questionTypes": ["countries"],
@@ -91,7 +97,7 @@ See `API_DOCUMENTATION.md` for all endpoint specifications.
 
 The backend uses 4 tables:
 
-1. **User** - Clerk auth + profile
+1. **User** - local auth account + profile
 2. **Country** - 203 countries with metadata
 3. **ChallengeResult** - Leaderboard entries (Challenge mode only)
 4. **LeaderboardCache** (optional) - Pre-calculated rankings
@@ -222,18 +228,18 @@ npm run db:seed
 # Test game creation
 curl -X POST http://localhost:3000/api/games/create \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $CLERK_TOKEN" \
+  -H "Authorization: Bearer <jwt-token>" \
   -d '{"region":"Europe","questionTypes":["countries"],"mode":"challenge"}'
 
 # Test answer submission
 curl -X POST http://localhost:3000/api/games/GAME_ID/submit \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer $CLERK_TOKEN" \
+  -H "Authorization: Bearer <jwt-token>" \
   -d '{"countryId":"DE","questionType":"countries"}'
 
 # Test leaderboard
 curl http://localhost:3000/api/leaderboards/Europe/countries \
-  -H "Authorization: Bearer $CLERK_TOKEN"
+  -H "Authorization: Bearer <jwt-token>"
 ```
 
 ### Integration Testing (TODO)
@@ -256,11 +262,11 @@ Create `src/__tests__/api/*.test.ts` files to test:
 ### Issue: Countries not in database
 **Solution:** Run `npm run db:seed`
 
-### Issue: Clerk authentication failing
+### Issue: Authentication failing
 **Solution:** 
-- Verify `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` are correct
-- Ensure Clerk project is properly configured
-- Check Clerk webhook is set up for user sync
+- Verify `AUTH_JWT_SECRET` is set in `.env.local`
+- Ensure user exists via `POST /api/auth/register`
+- Login through `POST /api/auth/login` and use the returned bearer token
 
 ### Issue: Leaderboard not returning results
 **Solution:**
@@ -319,7 +325,7 @@ npm run build  # Check build size and performance
 
 ## Security Checklist
 
-- ✅ All API endpoints require Clerk authentication
+- ✅ Protected API endpoints require JWT authentication
 - ✅ Input validation with Zod schemas
 - ✅ Prisma prevents SQL injection (parameterized queries)
 - ✅ Environment variables for sensitive data
@@ -334,5 +340,5 @@ npm run build  # Check build size and performance
 For issues or questions:
 1. Check `API_DOCUMENTATION.md` for endpoint specs
 2. Review `prisma/schema.prisma` for data model
-3. Check Clerk docs: https://clerk.com/docs
+3. Check auth endpoints: `POST /api/auth/register` and `POST /api/auth/login`
 4. Review Prisma docs: https://www.prisma.io/docs/

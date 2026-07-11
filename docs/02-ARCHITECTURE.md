@@ -17,7 +17,7 @@
 - **API Framework**: Next.js API Routes
 - **Database**: PostgreSQL
 - **ORM**: Prisma
-- **Authentication**: Clerk
+- **Authentication**: Local username/password + JWT
 - **Validation**: Zod
 
 ### Infrastructure
@@ -233,7 +233,7 @@ CREATE TABLE "User" (
   id TEXT PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   username TEXT UNIQUE,
-  clerkId TEXT UNIQUE NOT NULL,
+  passwordHash TEXT NOT NULL,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -297,7 +297,7 @@ CREATE TABLE "MonthlyStats" (
 
 ## Security Considerations
 
-1. **Authentication**: Clerk handles user authentication
+1. **Authentication**: Local credentials with JWT bearer tokens
 2. **Authorization**: Verify user ID matches game creator before accepting answers
 3. **Rate Limiting**: Limit API calls per IP address
 4. **Input Validation**: Validate all country IDs and question types

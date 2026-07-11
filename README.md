@@ -86,9 +86,6 @@ MapMaster/
 │   ├── app/                # Next.js App Router pages
 │   │   ├── api/           # API routes
 │   │   ├── game/          # Game pages
-│   │   ├── profile/       # User profile page
-│   │   ├── stats/         # Statistics page
-│   │   ├── achievements/  # Achievements page
 │   │   ├── leaderboard/   # Leaderboards page
 │   │   ├── layout.tsx     # Root layout
 │   │   └── page.tsx       # Home page
@@ -336,7 +333,7 @@ Date: July 10, 2026
 - **User Analytics**: PostHog
 - **Performance Monitoring**: Vercel Analytics
 - **Uptime Monitoring**: Pingdom/UptimeRobot
-- **Custom Events**: Game completions, achievements, etc.
+- **Custom Events**: Game starts, completions, and leaderboard submissions
 
 ## 🧪 Testing
 

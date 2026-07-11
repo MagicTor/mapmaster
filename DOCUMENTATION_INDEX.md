@@ -38,7 +38,7 @@
 - **[BACKEND_COMPLETE.md](BACKEND_COMPLETE.md)**
   - 12 API endpoints
   - 4-table database schema
-  - Clerk authentication
+  - Local username/password authentication with JWT
   - Zod validation
   - Utility functions
   - Production-ready code

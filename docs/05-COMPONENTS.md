@@ -13,7 +13,7 @@ App
 │   ├── GamePage
 │   ├── ResultsPage
 │   └── LeaderboardPage
-└── Providers (Clerk, Zustand)
+└── Providers (Zustand)
 ```
 
 ---

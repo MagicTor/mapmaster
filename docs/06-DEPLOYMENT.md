@@ -45,10 +45,8 @@ Create `.env.local`:
 # Database
 DATABASE_URL="postgresql://user:password@localhost:5432/mapmaster_dev"
 
-# Clerk Authentication
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxx
-CLERK_SECRET_KEY=sk_test_xxx
-CLERK_WEBHOOK_SECRET=whsec_xxx
+# Authentication
+AUTH_JWT_SECRET=replace-with-a-long-random-secret
 
 # Redis (optional)
 REDIS_URL="redis://localhost:6379"
@@ -96,10 +94,8 @@ Create `.env.production` (never commit):
 # Database (use connection pooling in production)
 DATABASE_URL="postgresql://user:password@host:5432/mapmaster?sslmode=require&schema=public&pgbouncer=true"
 
-# Clerk
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_xxx
-CLERK_SECRET_KEY=sk_live_xxx
-CLERK_WEBHOOK_SECRET=whsec_xxx
+# Authentication
+AUTH_JWT_SECRET=replace-with-a-long-random-secret
 
 # Redis
 REDIS_URL="redis://:password@host:6379"
@@ -137,7 +133,7 @@ vercel link
 ```bash
 # In Vercel Dashboard or via CLI
 vercel env add DATABASE_URL
-vercel env add CLERK_SECRET_KEY
+vercel env add AUTH_JWT_SECRET
 # ... add all other variables
 ```
 
@@ -154,7 +150,7 @@ vercel env add CLERK_SECRET_KEY
   "outputDirectory": ".next",
   "env": {
     "DATABASE_URL": "@database_url",
-    "CLERK_SECRET_KEY": "@clerk_secret_key"
+    "AUTH_JWT_SECRET": "@auth_jwt_secret"
   },
   "headers": [
     {
@@ -197,7 +193,7 @@ railway init
 **3. Configure Variables**
 ```bash
 railway variable add DATABASE_URL
-railway variable add CLERK_SECRET_KEY
+railway variable add AUTH_JWT_SECRET
 # ... add all variables
 ```
 
@@ -222,9 +218,9 @@ railway deploy
 psql $DATABASE_URL -c "CREATE DATABASE mapmaster_prod;"
 ```
 
-**3. Run Migrations**
+**3. Sync Schema**
 ```bash
-DATABASE_URL=$PROD_DATABASE_URL npx prisma migrate deploy
+DATABASE_URL=$PROD_DATABASE_URL npx prisma db push
 ```
 
 **4. Seed Data**
@@ -246,9 +242,9 @@ DATABASE_URL=$PROD_DATABASE_URL npx prisma db seed --skip-generate
 psql -h <endpoint> -U admin -c "CREATE DATABASE mapmaster_prod;"
 ```
 
-**3. Run Migrations**
+**3. Sync Schema**
 ```bash
-DATABASE_URL="postgresql://admin:password@endpoint:5432/mapmaster_prod" npx prisma migrate deploy
+DATABASE_URL="postgresql://admin:password@endpoint:5432/mapmaster_prod" npx prisma db push
 ```
 
 ### 4.3 Connection Pooling
@@ -316,7 +312,7 @@ jobs:
         run: npm run type-check
       
       - name: Setup database
-        run: npx prisma migrate deploy
+        run: npx prisma db push
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/mapmaster_test
       

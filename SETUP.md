@@ -6,6 +6,17 @@ MapMaster is a production-ready, browser-based geography game built with modern 
 
 ## 📋 Checklist for Complete Setup
 
+## 🚀 Debian Quick Production Setup (PM2)
+
+For Debian servers, use the included bootstrap script. It installs dependencies, configures the database/env, builds the app, and starts it with PM2 immediately.
+
+```bash
+chmod +x ./setup-debian.sh
+./setup-debian.sh
+pm2 status
+pm2 logs mapmaster --lines 100
+```
+
 ### Phase 1: Development Environment (Estimated: 30 mins)
 
 - [ ] **Install Node.js**
@@ -69,23 +80,26 @@ MapMaster is a production-ready, browser-based geography game built with modern 
   npm run db:seed
   ```
 
-### Phase 3: Authentication Setup (Estimated: 15 mins)
+### Phase 3: Authentication Setup (Estimated: 10 mins)
 
-- [ ] **Create Clerk Account**
-  - Go to https://dashboard.clerk.com
-  - Sign up and create a new application
-  - Copy your publishable key and secret key
-
-- [ ] **Configure Clerk in .env.local**
+- [ ] **Configure JWT Secret in .env.local**
   ```
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_xxx
-  CLERK_SECRET_KEY=sk_test_xxx
-  CLERK_WEBHOOK_SECRET=whsec_xxx
+  AUTH_JWT_SECRET=replace-with-a-long-random-secret
   ```
 
-- [ ] **Add Clerk to Next.js**
-  - Follow the Clerk documentation for Next.js integration
-  - Clerk will provide setup instructions in dashboard
+- [ ] **Create First User via API**
+  ```bash
+  curl -X POST http://localhost:3000/api/auth/register \
+    -H "Content-Type: application/json" \
+    -d '{"username":"admin","email":"admin@example.com","password":"StrongPassword123!"}'
+  ```
+
+- [ ] **Login and Capture Token**
+  ```bash
+  curl -X POST http://localhost:3000/api/auth/login \
+    -H "Content-Type: application/json" \
+    -d '{"username":"admin","password":"StrongPassword123!"}'
+  ```
 
 ### Phase 4: Development Server (Estimated: 5 mins)
 
@@ -302,11 +316,8 @@ await prisma.playerStats.update({
 # Format: postgresql://username:password@host:port/database
 DATABASE_URL=postgresql://postgres:password@localhost:5432/mapmaster_dev
 
-# Clerk Authentication
-# Get from: https://dashboard.clerk.com
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
-CLERK_SECRET_KEY=sk_test_your_secret_here
-CLERK_WEBHOOK_SECRET=whsec_your_webhook_secret
+# Local Authentication
+AUTH_JWT_SECRET=replace-with-a-long-random-secret
 
 # Redis (Optional, for caching)
 REDIS_URL=redis://localhost:6379
@@ -479,7 +490,7 @@ npm run type-check
 - **Tailwind Docs**: https://tailwindcss.com/docs
 - **TypeScript Docs**: https://www.typescriptlang.org/docs
 - **Zustand Docs**: https://github.com/pmndrs/zustand
-- **Clerk Docs**: https://clerk.com/docs
+- **JWT Auth**: Configure `AUTH_JWT_SECRET` in `.env.local`
 - **Vercel Docs**: https://vercel.com/docs
 
 ---

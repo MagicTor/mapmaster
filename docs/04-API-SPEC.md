@@ -12,7 +12,7 @@ All endpoints return JSON and support CORS.
 
 ## Authentication
 
-All endpoints except `/data/*` require authentication via Clerk JWT token in `Authorization` header.
+All protected endpoints require authentication via JWT bearer token in the `Authorization` header.
 
 ```
 Authorization: Bearer <clerk_jwt_token>

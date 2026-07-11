@@ -6,7 +6,11 @@ http://localhost:3000/api
 ```
 
 ## Authentication
-All endpoints require Clerk authentication (JWT in Authorization header).
+Authentication uses local username/password accounts with JWT bearer tokens.
+
+Auth endpoints:
+- `POST /api/auth/register`
+- `POST /api/auth/login`
 
 ---
 

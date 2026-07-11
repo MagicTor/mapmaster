@@ -182,7 +182,7 @@ Pan (drag):
 - **react-simple-maps** - SVG maps
 - **Howler.js** - Audio
 - **Prisma** - Database ORM
-- **Clerk** - Authentication (optional)
+- **JWT auth** - Local username/password authentication
 
 ### Architecture
 ```

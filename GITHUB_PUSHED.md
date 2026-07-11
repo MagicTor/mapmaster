@@ -181,7 +181,7 @@ git commit -m "Phase 4 Complete: Accessibility, mobile optimization, performance
 ⚠️ **Before deploying to production**:
 1. Set up environment variables on Vercel
 2. Configure PostgreSQL production database
-3. Set up Clerk authentication
+3. Set up local username/password authentication
 4. Review API rate limiting (TODO: Phase 6)
 
 ---

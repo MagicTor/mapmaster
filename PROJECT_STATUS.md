@@ -37,7 +37,7 @@
 - [x] Plus 3 supporting endpoints (utils, health, etc.)
 
 ### Authentication & Validation
-- [x] Clerk integration on all endpoints
+- [x] Local JWT auth integrated on protected endpoints
 - [x] Zod schema validation
 - [x] Input validation for POST requests
 - [x] Error handling with proper HTTP status codes
@@ -220,7 +220,7 @@
 - [ ] Vercel setup
 - [ ] PostgreSQL cloud database
 - [ ] Environment variables (production)
-- [ ] Clerk configuration
+- [ ] Production JWT secret configuration
 - [ ] CORS setup
 - [ ] Database migrations
 - [ ] Data seeding
@@ -240,7 +240,7 @@
 ✅ Complete backend API with all endpoints
 ✅ Database schema and seed data
 ✅ Comprehensive documentation
-✅ Authentication (Clerk) integrated
+✅ Authentication (local username/password + JWT) integrated
 ✅ Input validation (Zod)
 ✅ Game logic utilities
 ✅ Ranking algorithm (implemented server-side)

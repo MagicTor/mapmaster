@@ -20,8 +20,8 @@ npm install howler.js geojson-utils @types/howler.js
 # Copy example env file
 cp .env.example .env.local
 
-# Add your Clerk API keys (optional for basic testing)
-# The app works without auth for now
+# Set a JWT secret for local authentication
+# AUTH_JWT_SECRET=replace-with-a-long-random-secret
 ```
 
 ### Step 3: Run Development Server (1 minute)

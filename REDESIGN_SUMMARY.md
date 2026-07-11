@@ -225,7 +225,7 @@ MapMaster/
 
 ### Phase 3: Frontend Setup (Est. 3-4 days)
 - [ ] Create Zustand stores (game, UI, user)
-- [ ] Set up Clerk authentication
+- [ ] Set up local username/password authentication
 - [ ] Create page layouts (5 pages)
 - [ ] Create game components (11 components)
 - [ ] Create shared components (9 components)

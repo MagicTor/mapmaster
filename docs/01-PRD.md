@@ -327,7 +327,7 @@ Responsive design for all screen sizes.
 - Frontend: Vercel
 - Backend: Node.js API
 - Database: PostgreSQL
-- Authentication: Clerk or similar
+- Authentication: local username/password with JWT
 
 ---
 

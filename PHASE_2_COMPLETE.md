@@ -45,7 +45,7 @@ Successfully implemented **complete backend API** for MapMaster with 9 API route
 - ✅ `DEPLOYMENT_GUIDE.md` - Setup, deployment, and troubleshooting
 
 ### Architecture Features
-- ✅ Clerk authentication on all endpoints
+- ✅ JWT authentication on protected endpoints
 - ✅ Zod input validation
 - ✅ Ranking algorithm: lives DESC → incorrect guesses ASC → date ASC
 - ✅ Monthly leaderboard segmentation
@@ -128,9 +128,9 @@ Ranking algorithm:
 - Practice mode: **Never persisted** (no leaderboard entries)
 
 ### Authentication
-- All API endpoints require **Clerk JWT**
+- Protected API endpoints require **JWT bearer token**
 - User auto-created on first game completion
-- Syncing via Clerk webhook (TODO: Phase 2b)
+- Local auth users created via register endpoint
 
 ### Database Efficiency
 - Country.id = ISO 3166-1 alpha-2 codes for fast lookups
@@ -149,11 +149,11 @@ npm install
 
 # 2. Set up environment
 cp .env.example .env.local
-# Edit .env.local with your PostgreSQL + Clerk keys
+# Edit .env.local with your PostgreSQL + AUTH_JWT_SECRET
 
 # 3. Initialize database
 npm run prisma:generate
-npm run prisma:migrate
+npm run db:push
 npm run db:seed
 
 # 4. Start development server
@@ -168,7 +168,7 @@ curl http://localhost:3000/api/health -H "Authorization: Bearer $TOKEN"
 ## 📋 VALIDATION CHECKLIST
 
 ### Database Schema ✅
-- [x] User table with Clerk sync fields
+- [x] User table with local auth fields
 - [x] Country table with all 203 countries (7 regions)
 - [x] ChallengeResult table (leaderboard entries only)
 - [x] Proper foreign key relationships
@@ -176,7 +176,7 @@ curl http://localhost:3000/api/health -H "Authorization: Bearer $TOKEN"
 
 ### API Endpoints ✅
 - [x] All 12 endpoints implemented
-- [x] Clerk authentication on all endpoints
+- [x] JWT authentication on protected endpoints
 - [x] Zod input validation on create/submit/complete
 - [x] Region and question type validation
 - [x] Month/year filtering for leaderboards
@@ -206,7 +206,7 @@ curl http://localhost:3000/api/health -H "Authorization: Bearer $TOKEN"
 ```
 Frontend (TODO: Phase 3)
     ↓
-Clerk Auth ← Webhook → Backend Auth Sync
+Local Auth API (register/login) → JWT → Protected endpoints
     ↓
 Next.js API Routes (9 routes)
     ↓
@@ -237,7 +237,7 @@ PostgreSQL Database
 
 These are intentionally deferred to Phase 3+ (frontend-focused):
 
-- Clerk webhook sync handler (authentication/sync-user endpoint)
+- Local register/login auth endpoints
 - Zustand stores (game state, UI state, user state)
 - Frontend pages (HomePage, RegionPage, GamePage, etc.)
 - Interactive SVG map component
@@ -380,7 +380,7 @@ When ready to begin frontend:
 - ✅ 12 API endpoints fully implemented
 - ✅ Database schema finalized
 - ✅ 203 countries seeded and ready
-- ✅ Authentication integrated with Clerk
+- ✅ Authentication integrated with local JWT auth
 - ✅ Input validation with Zod
 - ✅ Ranking algorithm verified
 - ✅ Monthly leaderboard segmentation
