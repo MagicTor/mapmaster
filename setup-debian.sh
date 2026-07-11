@@ -38,6 +38,35 @@ escape_sql_literal() {
   printf "%s" "$1" | sed "s/'/''/g"
 }
 
+set_env_var() {
+  local file_path="$1"
+  local key="$2"
+  local value="$3"
+  local tmp_file
+
+  if [ ! -f "$file_path" ]; then
+    printf "%s=%s\n" "$key" "$value" > "$file_path"
+    return
+  fi
+
+  tmp_file="$(mktemp)"
+  awk -v key="$key" -v value="$value" '
+    BEGIN { updated = 0 }
+    $0 ~ ("^" key "=") {
+      print key "=" value
+      updated = 1
+      next
+    }
+    { print }
+    END {
+      if (updated == 0) {
+        print key "=" value
+      }
+    }
+  ' "$file_path" > "$tmp_file"
+  mv "$tmp_file" "$file_path"
+}
+
 require_repo_root
 
 prompt_with_default() {
@@ -154,33 +183,16 @@ if [ ! -f ".env.local" ]; then
   cp .env.example .env.local
 fi
 
-if grep -q '^DATABASE_URL=' .env.local; then
-  sed -i "s|^DATABASE_URL=.*|DATABASE_URL=${DATABASE_URL}|" .env.local
-else
-  echo "DATABASE_URL=${DATABASE_URL}" >> .env.local
-fi
+set_env_var ".env.local" "DATABASE_URL" "${DATABASE_URL}"
 
 # Prisma CLI reads .env by default (not .env.local), so ensure DATABASE_URL exists there too.
-if [ -f ".env" ]; then
-  if grep -q '^DATABASE_URL=' .env; then
-    sed -i "s|^DATABASE_URL=.*|DATABASE_URL=${DATABASE_URL}|" .env
-  else
-    echo "DATABASE_URL=${DATABASE_URL}" >> .env
-  fi
-else
-  echo "DATABASE_URL=${DATABASE_URL}" > .env
-fi
+set_env_var ".env" "DATABASE_URL" "${DATABASE_URL}"
 
 # Also export for current shell execution (covers all Prisma commands in this script).
 export DATABASE_URL
 
-if grep -q '^NEXT_PUBLIC_API_URL=' .env.local; then
-  sed -i "s|^NEXT_PUBLIC_API_URL=.*|NEXT_PUBLIC_API_URL=http://localhost:3000|" .env.local
-fi
-
-if grep -q '^API_INTERNAL_URL=' .env.local; then
-  sed -i "s|^API_INTERNAL_URL=.*|API_INTERNAL_URL=http://localhost:3000|" .env.local
-fi
+set_env_var ".env.local" "NEXT_PUBLIC_API_URL" "http://localhost:3000"
+set_env_var ".env.local" "API_INTERNAL_URL" "http://localhost:3000"
 
 log "Installing npm dependencies..."
 npm install
