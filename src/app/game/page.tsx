@@ -92,7 +92,7 @@ export default function GamePage() {
       if (successful) {
         play('complete');
       }
-      const result = await completeGame(successful);
+      await completeGame(successful);
       router.push(`/results?gameId=${gameId}&successful=${successful}`);
     } catch (error) {
       console.error('Error completing game:', error);
