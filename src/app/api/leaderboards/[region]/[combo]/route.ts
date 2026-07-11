@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { parse } from "date-fns";
 
 export async function GET(
   req: NextRequest,
