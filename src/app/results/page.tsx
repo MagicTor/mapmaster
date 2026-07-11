@@ -64,22 +64,6 @@ function ResultsPageContent() {
     );
   }
 
-  export default function ResultsPage() {
-    return (
-      <Suspense
-        fallback={
-          <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-            <div className="text-center">
-              <p className="text-gray-600 dark:text-gray-400 mb-4">Loading results...</p>
-            </div>
-          </div>
-        }
-      >
-        <ResultsPageContent />
-      </Suspense>
-    );
-  }
-
   const progressPercentage = Math.round((answeredCountries.size / countries.length) * 100);
 
   return (
@@ -244,5 +228,21 @@ function ResultsPageContent() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
+          <div className="text-center">
+            <p className="text-gray-600 dark:text-gray-400 mb-4">Loading results...</p>
+          </div>
+        </div>
+      }
+    >
+      <ResultsPageContent />
+    </Suspense>
   );
 }
