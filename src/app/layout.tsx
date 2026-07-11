@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Clerk } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -42,9 +42,9 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
-        <Clerk.ClerkProvider>
+        <ClerkProvider>
           {children}
-        </Clerk.ClerkProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
