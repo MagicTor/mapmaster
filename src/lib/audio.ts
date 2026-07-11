@@ -97,7 +97,7 @@ export function getAudioManager(): AudioManager {
 
 // Hook for using audio in components
 export function useAudio() {
-  const managerRef = useRef<AudioManager>(null);
+  const managerRef = useRef<AudioManager | null>(null);
 
   useEffect(() => {
     if (!managerRef.current) {
