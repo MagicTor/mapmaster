@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 import { z } from "zod";
+import { getAuthenticatedUser } from "@/lib/auth";
 
 const completeGameSchema = z.object({
   region: z.string(),
@@ -17,10 +17,7 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const authUser = await getAuthenticatedUser(req);
 
     const gameId = params.id;
     const body = await req.json();
@@ -35,25 +32,22 @@ export async function POST(
 
     // Only save Challenge mode successful completions
     if (mode === "challenge" && successful) {
-      // Get user record first
-      const user = await prisma.user.findFirst({
-        where: { clerkId: userId },
-      });
-
-      if (!user) {
-        // Create user if doesn't exist
-        await prisma.user.create({
-          data: {
-            clerkId: userId,
-            email: "temp@example.com", // Will be updated by Clerk webhook
+      const user =
+        authUser ||
+        (await prisma.user.upsert({
+          where: { username: "local_guest" },
+          update: {},
+          create: {
+            username: "local_guest",
+            passwordHash: "__disabled__",
+            displayName: "Local Guest",
           },
-        });
-      }
+        }));
 
       // Save challenge result to leaderboard
       const result = await prisma.challengeResult.create({
         data: {
-          userId: user?.id || (await prisma.user.findFirst({ where: { clerkId: userId } }))?.id!,
+          userId: user.id,
           region,
           questionTypes: JSON.stringify(questionTypes),
           livesRemaining,

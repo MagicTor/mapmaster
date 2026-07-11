@@ -232,6 +232,16 @@ export DATABASE_URL
 set_env_var ".env.local" "NEXT_PUBLIC_API_URL" "http://localhost:3000"
 set_env_var ".env.local" "API_INTERNAL_URL" "http://localhost:3000"
 
+if [ -z "${AUTH_JWT_SECRET:-}" ]; then
+  if command_exists openssl; then
+    AUTH_JWT_SECRET="$(openssl rand -hex 32)"
+  else
+    AUTH_JWT_SECRET="$(head -c 32 /dev/urandom | od -An -tx1 | tr -d ' \n')"
+  fi
+fi
+set_env_var ".env.local" "AUTH_JWT_SECRET" "${AUTH_JWT_SECRET}"
+set_env_var ".env" "AUTH_JWT_SECRET" "${AUTH_JWT_SECRET}"
+
 log "Installing npm dependencies..."
 npm install
 
@@ -247,8 +257,17 @@ npm run db:seed
 log "Building project..."
 npm run build
 
+log "Installing PM2..."
+npm install -g pm2
+
+log "Starting app with PM2..."
+pm2 delete mapmaster >/dev/null 2>&1 || true
+pm2 start npm --name mapmaster -- start
+pm2 save >/dev/null 2>&1 || true
+
 log "Setup complete."
 log "Next steps:"
-log "  1) Review .env.local and set real Clerk keys."
-log "  2) Start dev server: npm run dev"
-log "  3) Start production server: npm run start"
+log "  1) App is running under PM2 process name: mapmaster"
+log "  2) Check status: pm2 status"
+log "  3) View logs: pm2 logs mapmaster"
+log "  4) Restart app: pm2 restart mapmaster"

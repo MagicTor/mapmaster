@@ -158,7 +158,7 @@ MapMaster/
 - **PgBouncer**: Connection pooling
 
 ### Authentication
-- **Clerk**: Managed authentication provider
+- **Local Auth API**: Username/password with bcrypt hashing + JWT tokens
 
 ### Deployment
 - **Vercel**: Frontend hosting with edge functions
@@ -313,7 +313,7 @@ Date: July 10, 2026
 
 ## 🔐 Security
 
-- **Authentication**: Clerk managed authentication
+- **Authentication**: Local username/password + JWT
 - **Rate Limiting**: Per-endpoint rate limits
 - **Input Validation**: Zod schema validation
 - **SQL Injection Prevention**: Prisma ORM

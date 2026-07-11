@@ -2,7 +2,6 @@ import { create } from 'zustand';
 
 export interface UserProfile {
   id: string;
-  clerkId: string;
   username: string;
   displayName: string;
   createdAt: Date;

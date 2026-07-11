@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 
 const submitAnswerSchema = z.object({
@@ -13,11 +12,6 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const gameId = params.id;
     const body = await req.json();
     const { countryId, questionType, isCorrect } =

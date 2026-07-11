@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(
@@ -7,18 +6,15 @@ export async function GET(
   { params }: { params: { userId: string } }
 ) {
   try {
-    const { userId } = auth();
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const targetUserId = params.userId;
     const region = req.nextUrl.searchParams.get("region");
     const combo = req.nextUrl.searchParams.get("combo");
 
     // Get user
     const user = await prisma.user.findFirst({
-      where: { clerkId: targetUserId },
+      where: {
+        OR: [{ id: targetUserId }, { username: targetUserId }],
+      },
     });
 
     if (!user) {

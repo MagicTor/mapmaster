@@ -16,9 +16,9 @@ generator client {
 
 model User {
   id            String   @id @default(cuid())
-  clerkId       String   @unique
-  email         String   @unique
-  username      String?  @unique @db.VarChar(50)
+  username      String   @unique @db.VarChar(50)
+  passwordHash  String   @db.VarChar(255)
+  email         String?  @unique
   displayName   String?  @db.VarChar(100)
   avatar        String?  @db.VarChar(500)
   createdAt     DateTime @default(now())
@@ -28,7 +28,6 @@ model User {
   challengeResults ChallengeResult[]
   leaderboardCache LeaderboardCache[]
 
-  @@index([clerkId])
   @@index([email])
   @@map("User")
 }
