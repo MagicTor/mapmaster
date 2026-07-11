@@ -1,6 +1,6 @@
 'use client';
 
-import React, { ReactNode, ErrorInfo } from 'react';
+import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { Button } from './Button';
 
 interface Props {
@@ -25,7 +25,7 @@ interface State {
  *   <GamePage />
  * </ErrorBoundary>
  */
-export class ErrorBoundary extends React.Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
@@ -37,11 +37,7 @@ export default function LeaderboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   // Fetch leaderboard data
-  useEffect(() => {
-    fetchLeaderboard();
-  }, [selectedCombo, month, year]);
-
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -64,7 +60,11 @@ export default function LeaderboardPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedCombo, month, year, region]);
+
+  useEffect(() => {
+    fetchLeaderboard();
+  }, [fetchLeaderboard]);
 
   const handleMonthChange = (newMonth: number) => {
     setMonth(newMonth);

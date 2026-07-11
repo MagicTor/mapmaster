@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { Question } from '@/store/gameStore';
+import Image from 'next/image';
+import type { Question } from '@/store/gameStore';
 
 interface QuestionPromptProps {
   question: Question | null;
@@ -9,11 +9,11 @@ interface QuestionPromptProps {
   showingFeedback?: 'correct' | 'incorrect' | null;
 }
 
-export const QuestionPrompt: React.FC<QuestionPromptProps> = ({
+export const QuestionPrompt = ({
   question,
   isAnswering = false,
   showingFeedback = null,
-}) => {
+}: QuestionPromptProps) => {
   if (!question) {
     return (
       <div className="text-center py-8">
@@ -48,9 +48,11 @@ export const QuestionPrompt: React.FC<QuestionPromptProps> = ({
       <div className="text-center">
         {question.type === 'flags' && question.flagUrl && (
           <div className="mb-4 flex justify-center">
-            <img
+            <Image
               src={question.flagUrl}
               alt="Flag"
+              width={160}
+              height={96}
               className="h-24 w-auto rounded shadow-md"
             />
           </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useGameStore } from '@/store/gameStore';
 import { Button } from '@/components/Button';
@@ -18,17 +18,9 @@ export default function ResultsPage() {
   const successful = searchParams.get('successful') === 'true';
   const { gameId, region, questionTypes, mode, lives, incorrectGuesses, countries, answeredCountries } = gameStore;
 
-  // Fetch leaderboard position if Challenge mode and successful
-  useEffect(() => {
-    if (mode === 'challenge' && successful && region && questionTypes.length > 0) {
-      fetchLeaderboardPosition();
-    }
-  }, [mode, successful, region, questionTypes]);
-
-  const fetchLeaderboardPosition = async () => {
+  const fetchLeaderboardPosition = useCallback(async () => {
     setIsLoading(true);
     try {
-      const combo = [...questionTypes].sort().join('-');
       const response = await fetch(
         `/api/leaderboards/${encodeURIComponent(region!)}/user?month=${new Date().getMonth() + 1}&year=${new Date().getFullYear()}`,
         { headers: { 'Content-Type': 'application/json' } }
@@ -43,7 +35,14 @@ export default function ResultsPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [questionTypes, region]);
+
+  // Fetch leaderboard position if Challenge mode and successful
+  useEffect(() => {
+    if (mode === 'challenge' && successful && region && questionTypes.length > 0) {
+      fetchLeaderboardPosition();
+    }
+  }, [mode, successful, region, questionTypes, fetchLeaderboardPosition]);
 
   const handlePlayAgain = () => {
     gameStore.resetGame();

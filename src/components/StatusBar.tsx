@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { motion } from 'framer-motion';
 
 interface StatusBarProps {
@@ -11,13 +10,13 @@ interface StatusBarProps {
   answeredCountries: number;
 }
 
-export const StatusBar: React.FC<StatusBarProps> = ({
+export const StatusBar = ({
   lives,
   incorrectGuesses,
   progress,
   totalCountries,
   answeredCountries,
-}) => {
+}: StatusBarProps) => {
   return (
     <div className="w-full bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4 shadow-sm">
       <div className="max-w-6xl mx-auto">

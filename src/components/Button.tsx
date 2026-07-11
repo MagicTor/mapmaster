@@ -1,12 +1,12 @@
 'use client';
 
-import React from 'react';
+import { forwardRef, ButtonHTMLAttributes, ReactNode } from 'react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const variantStyles = {
@@ -22,7 +22,7 @@ const sizeStyles = {
   lg: 'px-6 py-3 text-lg rounded-lg',
 };
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       variant = 'primary',

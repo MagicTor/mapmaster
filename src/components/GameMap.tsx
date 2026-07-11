@@ -45,6 +45,7 @@ export function GameMap({
   disabled = false,
 }: GameMapProps) {
   const svgRef = useRef<SVGSVGElement>(null);
+  const viewStateRef = useRef<ViewState>({ center: [0, 0], zoom: 1 });
   const [viewState, setViewState] = useState<ViewState>({
     center: [0, 0],
     zoom: 1,
@@ -52,13 +53,17 @@ export function GameMap({
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
 
+  useEffect(() => {
+    viewStateRef.current = viewState;
+  }, [viewState]);
+
   // Initialize view state for region
   useEffect(() => {
     const regionKey = region as any;
     try {
       const targetViewState = getViewStateForRegion(regionKey);
       const cancel = animateViewState(
-        viewState,
+        viewStateRef.current,
         targetViewState,
         600,
         (state) => {

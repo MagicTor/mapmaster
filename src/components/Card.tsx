@@ -1,14 +1,14 @@
 'use client';
 
-import React from 'react';
+import { ReactNode } from 'react';
 
 interface CardProps {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
   onClick?: () => void;
 }
 
-export const Card: React.FC<CardProps> = ({ className = '', children, onClick }) => (
+export const Card = ({ className = '', children, onClick }: CardProps) => (
   <div
     onClick={onClick}
     className={`

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/Button';
 
@@ -11,12 +11,12 @@ interface QuestionTypeSelectorProps {
   title?: string;
 }
 
-export const QuestionTypeSelector: React.FC<QuestionTypeSelectorProps> = ({
+export const QuestionTypeSelector = ({
   isOpen,
   onClose,
   onSelect,
   title = 'Select Question Types',
-}) => {
+}: QuestionTypeSelectorProps) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [selectedMode, setSelectedMode] = useState<'practice' | 'challenge' | null>(null);
 

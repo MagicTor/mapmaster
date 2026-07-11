@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useUIStore } from '@/store/uiStore';
 import { useGameStore } from '@/store/gameStore';
@@ -120,7 +120,7 @@ export default function RegionPage() {
           transition={{ delay: 0.3, duration: 0.4 }}
         >
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            This Month's Stats
+            This Month&apos;s Stats
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
