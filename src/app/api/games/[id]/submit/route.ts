@@ -31,6 +31,7 @@ export async function POST(
       success: true,
       gameId,
       countryId,
+      questionType,
       isCorrect,
       feedback: isCorrect
         ? "Correct! Great job!"
