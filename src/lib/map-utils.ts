@@ -278,7 +278,7 @@ export function groupByContinent(
 ): Record<string, Country[]> {
   return countries.reduce(
     (acc, country) => {
-      const continent = country.continent || 'Unknown';
+      const continent = country.region || 'Unknown';
       if (!acc[continent]) {
         acc[continent] = [];
       }
