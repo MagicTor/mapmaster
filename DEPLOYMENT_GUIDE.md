@@ -3,19 +3,29 @@
 ## Environment Setup
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+- Node.js 20+ and npm 10+
 - PostgreSQL 12+
 - Clerk account (https://clerk.com)
 - Vercel account (optional, for deployment)
 
-### 1. Install Dependencies
+### 1. Install Node.js and npm (Debian)
+
+```bash
+sudo apt update
+sudo apt install -y curl ca-certificates gnupg
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+node -v
+npm -v
+```
+
+### 2. Install Dependencies
 
 ```bash
 npm install
 ```
 
-### 2. Set Up Environment Variables
+### 3. Set Up Environment Variables
 
 ```bash
 # Copy the example file
@@ -36,20 +46,20 @@ CLERK_WEBHOOK_SECRET=whsec_...
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-### 3. Initialize Database
+### 4. Initialize Database
 
 ```bash
 # Generate Prisma client
 npm run prisma:generate
 
-# Run migrations
-npm run prisma:migrate
+# Sync schema to database (repo currently has no committed prisma/migrations folder)
+npm run db:push
 
 # Seed 203 countries into database
 npm run db:seed
 ```
 
-### 4. Start Development Server
+### 5. Start Development Server
 
 ```bash
 npm run dev
@@ -96,8 +106,7 @@ See `prisma/schema.prisma` for complete schema.
 MapMaster/
 ├── prisma/
 │   ├── schema.prisma           # Database schema
-│   ├── seed.ts                 # Country seeding (203 countries)
-│   └── migrations/             # Database migrations
+│   └── seed.ts                 # Country seeding (203 countries)
 ├── src/
 │   ├── app/
 │   │   ├── api/                # All API routes
@@ -140,7 +149,7 @@ npm run dev                     # Start dev server
 
 # Database
 npm run prisma:generate        # Generate Prisma client
-npm run prisma:migrate         # Run migrations
+npm run db:push                # Sync schema to database
 npm run prisma:studio          # Open Prisma Studio (DB browser)
 npm run db:seed                # Seed 203 countries
 
@@ -181,9 +190,10 @@ git push origin main
 ### 3. Post-Deployment
 
 ```bash
-# Run migrations in production
+# Generate Prisma client and sync schema in production
 vercel env pull
-npm run prisma:migrate -- --skip-generate
+npm run prisma:generate
+npm run db:push
 
 # Seed production database
 npm run db:seed

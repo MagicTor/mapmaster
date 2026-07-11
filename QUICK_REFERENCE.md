@@ -112,7 +112,9 @@ cp .env.example .env.local
 ### 3. Database
 ```bash
 createdb mapmaster_dev
-npx prisma migrate dev --name init
+npm run prisma:generate
+npm run db:push
+npm run db:seed
 ```
 
 ### 4. Run

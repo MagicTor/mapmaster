@@ -69,11 +69,14 @@ NEXT_PUBLIC_POSTHOG_KEY=phc_xxx
 # Create database
 createdb mapmaster_dev
 
-# Run migrations
-npx prisma migrate dev
+# Generate Prisma client
+npm run prisma:generate
+
+# Sync schema to database (this repo currently has no committed migrations folder)
+npm run db:push
 
 # Seed data
-npx prisma db seed
+npm run db:seed
 ```
 
 **5. Run Development Server**

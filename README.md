@@ -26,6 +26,12 @@ A competitive, production-ready web application for testing geography knowledge 
 
 ### Installation
 
+**Debian quick setup (automated):**
+```bash
+chmod +x ./setup-debian.sh
+./setup-debian.sh
+```
+
 1. **Clone the repository**
 ```bash
 git clone https://github.com/yourusername/mapmaster.git
@@ -44,11 +50,14 @@ cp .env.example .env.local
 # Create PostgreSQL database
 createdb mapmaster_dev
 
-# Run Prisma migrations
-npx prisma migrate dev
+# Generate Prisma client
+npm run prisma:generate
+
+# Sync schema to database (this repo currently has no committed migrations folder)
+npm run db:push
 
 # Seed data (optional)
-npx prisma db seed
+npm run db:seed
 ```
 
 4. **Run development server**

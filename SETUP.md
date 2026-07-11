@@ -57,8 +57,8 @@ MapMaster is a production-ready, browser-based geography game built with modern 
   # Generate Prisma client
   npx prisma generate
   
-  # Run migrations (creates tables)
-  npx prisma migrate dev --name init
+  # Sync schema to database (this repo currently has no committed migrations folder)
+  npm run db:push
   
   # Open Prisma Studio (optional, for visual DB management)
   npx prisma studio
@@ -66,7 +66,7 @@ MapMaster is a production-ready, browser-based geography game built with modern 
 
 - [ ] **Seed Sample Data** (optional)
   ```bash
-  npx prisma db seed
+  npm run db:seed
   ```
 
 ### Phase 3: Authentication Setup (Estimated: 15 mins)
@@ -350,8 +350,8 @@ npm start              # Run production build
 
 # Database
 npx prisma generate    # Generate Prisma client
-npx prisma migrate dev # Create and run migrations
-npx prisma db seed     # Run seed script
+npm run db:push        # Sync schema to database
+npm run db:seed        # Run seed script
 npx prisma studio     # Open visual DB browser
 
 # Testing
