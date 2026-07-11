@@ -137,7 +137,7 @@ export function GameMap({
 
         <ComposableMap projection="geoMercator" ref={svgRef}>
           <Geographies geography={geoUrl} onLoadComplete={handleMapLoad}>
-            {({ geographies }) =>
+            {({ geographies }: { geographies: any[] }) =>
               geographies.map((geo) => {
                 return (
                   <motion.g
