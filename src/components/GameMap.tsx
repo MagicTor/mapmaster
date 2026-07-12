@@ -146,8 +146,8 @@ export function GameMap({
 
   return (
     <div className="w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden">
-      {/* Map container */}
-      <div className="relative w-full h-full min-h-[400px] md:min-h-[600px]">
+      {/* Map container — fluid height so the player can see more of the map */}
+      <div className="relative w-full" style={{ height: 'clamp(380px, 60vh, 700px)' }}>
         {mapStatus === 'loading' && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 z-10">
             <div className="text-center">
@@ -163,9 +163,13 @@ export function GameMap({
           ref={svgRef}
           style={{ width: '100%', height: '100%' }}
         >
+          {/* ZoomableGroup is ALWAYS interactive — pan/zoom never blocked.
+              Only country-click selection is gated by the disabled prop. */}
           <ZoomableGroup
             center={viewState.center}
             zoom={viewState.zoom}
+            minZoom={0.5}
+            maxZoom={20}
             onMoveEnd={({ coordinates, zoom }) =>
               setViewState({ center: coordinates, zoom })
             }
@@ -188,7 +192,9 @@ export function GameMap({
                           stroke: '#ccc',
                           strokeWidth: 0.75,
                           outline: 'none',
-                          cursor: disabled ? 'not-allowed' : 'pointer',
+                          // Always show a pointer so pan intent is obvious;
+                          // click handler ignores the event when disabled.
+                          cursor: 'pointer',
                           transition: 'all 200ms ease-in-out',
                           opacity: 1,
                         },
@@ -196,9 +202,8 @@ export function GameMap({
                           stroke: '#fff',
                           strokeWidth: 1.5,
                           outline: 'none',
-                          cursor: disabled ? 'not-allowed' : 'pointer',
-                          opacity: disabled ? 0.7 : 1,
-                          filter: 'brightness(1.1)',
+                          cursor: 'pointer',
+                          filter: disabled ? 'none' : 'brightness(1.15)',
                         },
                         pressed: {
                           stroke: '#fff',
@@ -206,9 +211,7 @@ export function GameMap({
                           outline: 'none',
                         },
                       }}
-                      className={`transition-all duration-200 ${getCountryColor(
-                        geo
-                      )} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      className={`transition-all duration-200 ${getCountryColor(geo)}`}
                     />
                   </motion.g>
                 );

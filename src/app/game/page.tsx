@@ -133,7 +133,7 @@ export default function GamePage() {
             />
 
             {/* Game Map */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-4 overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-lg overflow-visible">
               <ErrorBoundary>
                 <GameMap
                   countries={countries}
