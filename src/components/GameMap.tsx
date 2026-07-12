@@ -6,6 +6,7 @@ import {
   ComposableMap,
   Geographies,
   Geography,
+  ZoomableGroup,
 } from 'react-simple-maps';
 import {
   getViewStateForRegion,
@@ -156,7 +157,19 @@ export function GameMap({
           </div>
         )}
 
-        <ComposableMap projection="geoMercator" ref={svgRef}>
+        <ComposableMap
+          projection="geoMercator"
+          projectionConfig={{ scale: 147 }}
+          ref={svgRef}
+          style={{ width: '100%', height: '100%' }}
+        >
+          <ZoomableGroup
+            center={viewState.center}
+            zoom={viewState.zoom}
+            onMoveEnd={({ coordinates, zoom }) =>
+              setViewState({ center: coordinates, zoom })
+            }
+          >
           <Geographies geography={geoUrl} onLoadComplete={handleMapLoad}>
             {({ geographies }: { geographies: any[] }) =>
               geographies.map((geo) => {
@@ -202,6 +215,7 @@ export function GameMap({
               })
             }
           </Geographies>
+          </ZoomableGroup>
         </ComposableMap>
 
         {/* Overlay controls */}

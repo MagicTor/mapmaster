@@ -48,36 +48,44 @@ export const REGION_BOUNDS: Record<Region, MapBounds> = {
 };
 
 /**
- * Calculate center point and zoom level for a region
- * @param bounds - The geographic bounds
- * @returns View state with center and zoom
+ * Hand-tuned view states for each region.
+ * These are calibrated for react-simple-maps with geoMercator projection
+ * and a base projectionConfig.scale of 147.
+ * center: [longitude, latitude] of the region's visual midpoint
+ * zoom: multiplier applied to the base projection scale
+ */
+export const REGION_VIEW_STATES: Record<Region, ViewState> = {
+  World:           { center: [  0,   15], zoom: 1   },
+  Europe:          { center: [ 15,   54], zoom: 4.5 },
+  Asia:            { center: [ 90,   35], zoom: 2   },
+  Africa:          { center: [ 20,    0], zoom: 2.5 },
+  'North America': { center: [-95,   50], zoom: 2   },
+  'South America': { center: [-58,  -20], zoom: 2.5 },
+  Oceania:         { center: [145,  -27], zoom: 3   },
+};
+
+/**
+ * Get the calibrated view state for a specific region.
+ */
+export function getViewStateForRegion(region: Region): ViewState {
+  return REGION_VIEW_STATES[region] ?? REGION_VIEW_STATES.World;
+}
+
+/**
+ * Calculate center point and zoom level from raw geographic bounds.
+ * Kept as a utility for dynamic bound-based calculations.
  */
 export function getViewStateForBounds(bounds: MapBounds): ViewState {
   const [minX, maxX] = bounds.x;
   const [minY, maxY] = bounds.y;
-
   const centerX = (minX + maxX) / 2;
   const centerY = (minY + maxY) / 2;
-
-  // Estimate zoom level based on bounds width
-  // This is approximate and may need tuning per library
   const width = maxX - minX;
   const zoom = Math.max(1, 5 - Math.log2(width / 50));
-
   return {
     center: [centerX, centerY],
     zoom: Math.min(5, zoom),
   };
-}
-
-/**
- * Get view state for a specific region
- * @param region - Region name
- * @returns View state for that region
- */
-export function getViewStateForRegion(region: Region): ViewState {
-  const bounds = REGION_BOUNDS[region];
-  return getViewStateForBounds(bounds);
 }
 
 /**
