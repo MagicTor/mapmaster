@@ -28,9 +28,8 @@ interface GameMapProps {
   disabled?: boolean;
 }
 
-// GeoJSON URL for country boundaries
-const geoUrl =
-  'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+// Local TopoJSON asset for country boundaries.
+const geoUrl = '/maps/countries-110m.json';
 
 /**
  * Interactive SVG world map component using react-simple-maps
